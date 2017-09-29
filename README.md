@@ -1,8 +1,9 @@
 # Dialogue Authoring Tool
 |Task|Due Date|Complete|In-Progress|Not Started|
 |:---------:|:---------:|:---------:|:---------:|:---------:|
-|Requirements List| | | | |
+|Requirements List|10/4|x| | |
 |[Mockup](https://drive.google.com/open?id=0B3ds3_lwLn5cTVlaV0RUbnJLZEVXOThvaGlIT2JRUUMzcU5n)|10/4| |x| |
+|Learn React.js|?| | |x|
 
 ## Technologies and Frameworks
 * HTML/CSS, Javascript
@@ -12,7 +13,7 @@
 
 ## Questions
 1. What database to use?
-2. Is Node.js good for backend
+2. Is Node.js good for backend?
 
 ## Features List
 ### Page 0
