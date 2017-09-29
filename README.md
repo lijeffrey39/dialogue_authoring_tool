@@ -1,13 +1,9 @@
-# dialogue_authoring_tool
-|Project|Lit Review (or requirements doc) Outline|Lit Review + RQ Draft (or mockups)|Data Prepared (or prototype)|Analyses Done (or implementation)|Final Report|
-|:---------:|:------:|:------:|:---------:|:---------:|:---------:|
-|Timeline                                                  |9/29|10/6|10/27|11/17|12/8|
-|[Confidence in Virtual Agents](#)                                            |/| | | | |
-|[Nonverbal Behavior Analysis and Generation](#)                              |/| | | | |
-|[User Modeling and Memory](https://github.com/WilliXL/user_modeling_memory)  |/| | | | |
-|[Time-Series Analysis of Rapport-Building](#)                                |/| | | | |
-|[Virtual Agent Dialogue Authoring](#)                                        |/| | | | |
-|Human-Agent Rapport-Building <a href="http://cra.org/cra-w/creu/#overview" target="_blank">(CREU)</a>: <a href="https://michelinaastlecreu.wordpress.com/" target="_blank">Mimi</a> and <a href="alvarostudieslearningscience.com" target="_blank">Alvaro</a>                                                    |/| | | | |
+# Dialogue Authoring Tool
+|Task|Due Date|Complete|In-Progress|Not Started|
+|:---------:|:---------:|:---------:|:---------:|:---------:|
+|Requirements List| | | | |
+|[Mockup] (https://drive.google.com/open?id=0B3ds3_lwLn5cTVlaV0RUbnJLZEVXOThvaGlIT2JRUUMzcU5n)| | | | |
+
 
 
 ## Logistics
