@@ -2,8 +2,7 @@
 |Task|Due Date|Complete|In-Progress|Not Started|
 |:---------:|:---------:|:---------:|:---------:|:---------:|
 |Requirements List| | | | |
-|[Mockup] (https://drive.google.com/open?id=0B3ds3_lwLn5cTVlaV0RUbnJLZEVXOThvaGlIT2JRUUMzcU5n)| | | | |
-
+|[Mockup](https://drive.google.com/open?id=0B3ds3_lwLn5cTVlaV0RUbnJLZEVXOThvaGlIT2JRUUMzcU5n)| | | | |
 
 
 ## Logistics
