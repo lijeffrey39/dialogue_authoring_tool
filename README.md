@@ -10,7 +10,8 @@
 * HTML/CSS, Javascript
 * React.js
 * Node.js
-* SQL?
+* SQL
+* [SSML](http://www.cepstral.com/en/tutorials/view/ssml) (see bottom for common usage)
 
 ## Questions
 1. What database to use?
