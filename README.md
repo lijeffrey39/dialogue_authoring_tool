@@ -2,9 +2,9 @@
 |Task|Due Date|Complete|In-Progress|Not Started|
 |:---------:|:---------:|:---------:|:---------:|:---------:|
 |Requirements List|10/4|x| | |
-|[Mockup](https://drive.google.com/open?id=0B3ds3_lwLn5cRko5MXpoTGtyYmZ2M0pGd1V0RkwtUUMtUW1N)|10/4| |x| |
+|Mockup [(1)](https://drive.google.com/open?id=0B3ds3_lwLn5cRko5MXpoTGtyYmZ2M0pGd1V0RkwtUUMtUW1N) [(2)](https://drive.google.com/open?id=0B3ds3_lwLn5cdGhtc04xV0JmTUhXcFBrbTdpallzVDRSWUhZ)|10/4| |x| |
 |Learn React.js|?| | |x|
-|Look at SSML syntax|?| | |x|
+|Look at SSML syntax|?| |x||
 
 ## Technologies and Frameworks
 * HTML/CSS, Javascript
