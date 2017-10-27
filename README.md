@@ -17,26 +17,20 @@
 1. What database to use?
 2. Is Node.js good for backend?
 
-## Features List
-### Main menu (page 0)
-* Select category, intent, social strategy from dropdown/search
-  + add new as option for each
-  + can pop up modal editor
-* List of all utterances that match category, intent, social strategy
-  + select checkbox/copy/paste/delete/undo/add new
-  + click utterance to go to Page 2
-### Category/intent/social strategy/tag editor (modal 0)
-* List of categories, intents, social strategies, tags
-  + select/copy/paste/delete/undo/add new
-  + double click to edit name
-### Utterance Editor (Page 1)
-* Options to change categories, intents, social strategies
+## MV Features List
+### Utterance Editor
+* Dropdowns to change categories, intents, social strategies
 * Textbox for utterance
-  + option to add tag (ex. hint from Wolfram Alpha)
-* SSML editor
+  + drag and drop api tags (ex. hint from Wolfram Alpha)
+  + drag and drop SSML tags
+  + preview text
   + TTS button
-  + SSML Tag list/adder
-* Save, cancel buttons
+* Save, cancel, undo save buttons
+### Main menu (page 0)
+* Sidebar with search, select phase, intent, social strategy from dropdown
+* List of all utterances that match category, intent, social strategy
+  + highlight/copy/paste/delete/undo/add new
+  + click utterance to go to Page 2
 
 ## Logistics
 Technical team meeting on Wednesdays at 5PM, group meeting on Fridays at 12:30PM.
