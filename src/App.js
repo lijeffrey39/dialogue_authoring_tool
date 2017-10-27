@@ -18,6 +18,7 @@ const dataSourceConfig = {
 const App = () => (
 	<div className="App">
 		<h1> Utterance Editor </h1>
+		<p> HI</p>
 		<div>
 			<MuiThemeProvider>
 				<AutoComplete
