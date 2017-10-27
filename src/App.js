@@ -1,5 +1,3 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -33,21 +31,6 @@ const App = () => (
     </div>
 );
 
-// class App extends Component {
-//   render() {
-//     return (
-//       <div className="App">
-//         <h1> Utterance Editor </h1>
-//     <AutoComplete
-//       floatingLabelText="Same text, different values"
-//       filter={AutoComplete.noFilter}
-//       openOnFocus={true}
-//       dataSource={dataSource3}
-//       dataSourceConfig={dataSourceConfig}
-//     />
-//       </div>
-//     );
-//   }
-// }
+
 
 export default App;
