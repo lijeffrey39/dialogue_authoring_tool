@@ -1,5 +1,5 @@
 import React from 'react';
-//import './App.css';
+import './fileMenu.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -8,7 +8,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Drawer from 'material-ui/Drawer';
 import SelectField from 'material-ui/SelectField';
 
-export default class DrawerSimpleExample extends React.Component 
+export default class FileMenu extends React.Component 
 {
 	constructor(props) 
 	{
@@ -16,7 +16,7 @@ export default class DrawerSimpleExample extends React.Component
 		this.state = {
 			open: true, 
 			searchInputData: [],
-			phasesInputData: [],
+			phaseInputData: [],
 			phases : [
 				'Problem 1',
 				'Problem 2',
@@ -37,12 +37,10 @@ export default class DrawerSimpleExample extends React.Component
 		};
 	}
 	
-	//toggles the drawer 
-	handleToggle = () => this.setState({open: !this.state.open});
-	
 	//updates the autocomplete based on input
 	handleUpdateInput = (value) => {
 		this.setState({
+			//change to have past results?
 		  	searchInputData: [
 				value,
 				value + value,
@@ -51,14 +49,17 @@ export default class DrawerSimpleExample extends React.Component
 		});
 	};
 
-	handlePhaseChange = (event, index, values) => this.setState({values});
+	//handles changes to dropdowns
+	handlePhaseChange = (event, index, phaseInputData) => this.setState({phaseInputData});
+	handleTaskStratChange = (event, index, taskStratInputData) => this.setState({taskStratInputData});
+	handleSocialStratChange = (event, index, socialStratInputData) => this.setState({socialStratInputData});
 
-	menuItems(values) {
-		return values.map((value) => (
+	menuItems(data, input) {
+		return data.map((value) => (
 		  <MenuItem
 			key={value}
 			insetChildren={true}
-			checked={this.phaseInputData && this.phaseInputData.indexOf(value) > -1}
+			checked={input && input.indexOf(value) > -1}
 			value={value}
 			primaryText={value}
 		  />
@@ -67,12 +68,8 @@ export default class DrawerSimpleExample extends React.Component
 
 	render() {
 		return (
-		<div>
+		<div className='fileMenu'>
 			<MuiThemeProvider>
-				<RaisedButton
-			  		label="Toggle Drawer"
-			  		onClick={this.handleToggle}
-				/>
 				<Drawer open={this.state.open}>
 					<AutoComplete
           				hintText="Search"
@@ -85,10 +82,28 @@ export default class DrawerSimpleExample extends React.Component
 					<SelectField
         				multiple={true}
         				hintText="Select a phase"
-        				value={this.state.phasesInputData}
+        				value={this.state.phaseInputData}
         				onChange={this.handlePhaseChange}
       				>
-        				{this.menuItems(this.state.phases)}
+        				{this.menuItems(this.state.phases, this.state.phaseInputData)}
+      				</SelectField>
+
+					<SelectField
+        				multiple={true}
+        				hintText="Select a Task Strategy"
+        				value={this.state.taskStratInputData}
+        				onChange={this.handleTaskStratChange}
+      				>
+        				{this.menuItems(this.state.taskStrats, this.state.taskStratInputData)}
+      				</SelectField>
+
+					  <SelectField
+        				multiple={true}
+        				hintText="Select a Social Strategy"
+        				value={this.state.socialStratInputData}
+        				onChange={this.handleSocialStratChange}
+      				>
+        				{this.menuItems(this.state.socialStrats, this.state.socialStratInputData)}
       				</SelectField>
 
 
@@ -97,5 +112,5 @@ export default class DrawerSimpleExample extends React.Component
 			</MuiThemeProvider>
 		  </div>
 		);
-	  }
 	}
+}

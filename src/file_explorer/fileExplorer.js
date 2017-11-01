@@ -1,5 +1,5 @@
 import React from 'react';
-//import './App.css';
+import './fileExplorer.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -9,18 +9,14 @@ import FileMenu from './fileMenu.js';
 
 const fileExplorer = () => (
 	<div className="file_explorer">
-		<h1> File Explorer </h1>
-		<FileMenu></FileMenu>
+		<h1> Home </h1>
 		<MuiThemeProvider>
-			<Divider />
-				Hi
-			<Divider />
+			<Divider/>
 		</MuiThemeProvider>
+		<FileMenu></FileMenu>
 		<div>
 		</div>
     </div>
 );
-
-
 
 export default fileExplorer;

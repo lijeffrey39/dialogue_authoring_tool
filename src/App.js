@@ -19,7 +19,7 @@ const dataSourceConfig = {
 const App = () => (
 	<div className="App">
 		<FileExplorer></FileExplorer>
-		<h1> Utterance Editor </h1>
+		{/* <h1> Utterance Editor </h1>
 		<div>
 			<MuiThemeProvider>
 				<AutoComplete
@@ -30,7 +30,7 @@ const App = () => (
 					dataSourceConfig={dataSourceConfig}
 			    />
 			</MuiThemeProvider>
-		</div>
+		</div> */}
     </div>
 );
 
