@@ -4,6 +4,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
+import FileExplorer from './file_explorer/fileExplorer.js';
 
 const dataSource3 = [
   {textKey: 'Some Text', valueKey: 'someFirstValue'},
@@ -17,6 +18,7 @@ const dataSourceConfig = {
 
 const App = () => (
 	<div className="App">
+		<FileExplorer></FileExplorer>
 		<h1> Utterance Editor </h1>
 		<div>
 			<MuiThemeProvider>
