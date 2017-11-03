@@ -1,5 +1,10 @@
 import React from 'react';
 import './App.css';
+import {
+  BrowserRouter,
+  Route,
+  Link
+} from 'react-router-dom'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -17,8 +22,10 @@ const dataSourceConfig = {
 
 
 const App = () => (
+	<BrowserRouter>
 	<div className="App">
-		<FileExplorer></FileExplorer>
+		{/* <FileExplorer></FileExplorer> */}
+		<Link to="/fileExplorer">File Explorer</Link>
 		{/* <h1> Utterance Editor </h1>
 		<div>
 			<MuiThemeProvider>
@@ -31,7 +38,9 @@ const App = () => (
 			    />
 			</MuiThemeProvider>
 		</div> */}
+		<Route path="/fileExplorer" component={FileExplorer}/>
     </div>
+		</BrowserRouter>
 );
 
 
