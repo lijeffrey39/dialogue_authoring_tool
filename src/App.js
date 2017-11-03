@@ -10,6 +10,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
 import FileExplorer from './file_explorer/fileExplorer.js';
+import Editor from './editor/editor.js';
 
 const dataSource3 = [
   {textKey: 'Some Text', valueKey: 'someFirstValue'},
@@ -25,7 +26,6 @@ const App = () => (
 	<BrowserRouter>
 	<div className="App">
 		{/* <FileExplorer></FileExplorer> */}
-		<Link to="/fileExplorer">File Explorer</Link>
 		{/* <h1> Utterance Editor </h1>
 		<div>
 			<MuiThemeProvider>
@@ -39,6 +39,7 @@ const App = () => (
 			</MuiThemeProvider>
 		</div> */}
 		<Route path="/fileExplorer" component={FileExplorer}/>
+		<Route path="/editor" component={Editor}/>
     </div>
 		</BrowserRouter>
 );
