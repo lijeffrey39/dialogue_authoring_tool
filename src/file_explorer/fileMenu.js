@@ -71,7 +71,7 @@ export default class FileMenu extends React.Component
 		<div className='fileMenu'>
 			<MuiThemeProvider>
 				<Drawer open={this.state.open}>
-					<AutoComplete
+					<AutoComplete className='fileMenu'
           				hintText="Search"
           				dataSource={this.state.searchInputData}
           				onUpdateInput={this.handleUpdateInput}
