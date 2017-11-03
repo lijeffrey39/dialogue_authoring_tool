@@ -10,6 +10,7 @@ import FileMenu from './fileMenu.js';
 const editor = () => (
 	<div className="file_explorer">
 		<h1> Home </h1>
+		<h1> Home </h1>
 		<MuiThemeProvider>
 			<Divider/>
 		</MuiThemeProvider>
