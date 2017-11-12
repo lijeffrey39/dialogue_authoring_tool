@@ -6,6 +6,14 @@ import AutoComplete from 'material-ui/AutoComplete';
 import Divider from 'material-ui/Divider';
 import MenuItem from 'material-ui/MenuItem';
 import FileMenu from './fileMenu.js';
+import firebase from '../fire.js';
+var database = firebase.database();
+
+var greeting = database.ref('Greeting/Greeting/SD/SSML');
+greeting.set('test');
+greeting.on('value', function(value){
+	console.log(value.val());
+})
 
 const fileExplorer = () => (
 	<div className="file_explorer">

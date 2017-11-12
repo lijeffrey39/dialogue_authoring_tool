@@ -12,6 +12,9 @@ import MenuItem from 'material-ui/MenuItem';
 import FileExplorer from './file_explorer/fileExplorer.js';
 import Editor from './editor/editor.js';
 
+//import firebase from './fire.js';
+
+
 const dataSource3 = [
   {textKey: 'Some Text', valueKey: 'someFirstValue'},
   {textKey: 'Some Text', valueKey: 'someSecondValue'},
