@@ -1,24 +1,6 @@
 import React from 'react';
-import './fileExplorer.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
-import AutoComplete from 'material-ui/AutoComplete';
-import Divider from 'material-ui/Divider';
-import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import FileMenu from './fileMenu.js';
-
-import Paper from 'material-ui/Paper';
-import Menu from 'material-ui/Menu';
-import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
-import PersonAdd from 'material-ui/svg-icons/social/person-add';
-import ContentLink from 'material-ui/svg-icons/content/link';
-import ContentCopy from 'material-ui/svg-icons/content/content-copy';
-import Download from 'material-ui/svg-icons/file/file-download';
-import Delete from 'material-ui/svg-icons/action/delete';
-import FontIcon from 'material-ui/FontIcon';
-
+import NewEditor from './fileMenu.js';
 
 const style = {
   paper: {
@@ -34,6 +16,11 @@ const style = {
 
 const editor = () => (
 
+	<div>
+		hi
+		<NewEditor></NewEditor>
+	</div>
+	/*
 	<div className="file_explorer">
 		<h1>Dialogue Editor</h1>
 		<MuiThemeProvider>
@@ -57,6 +44,7 @@ const editor = () => (
 		<div>
 		</div>
     </div>
+	*/
 );
 
 export default editor;
