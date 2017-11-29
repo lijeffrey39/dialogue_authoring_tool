@@ -6,6 +6,12 @@ import RaisedButton from 'material-ui/RaisedButton';
 import AutoComplete from 'material-ui/AutoComplete';
 import Divider from 'material-ui/Divider';
 import MenuItem from 'material-ui/MenuItem';
+import {List, ListItem} from 'material-ui/List';
+import FileFolder from 'material-ui/svg-icons/file/folder';
+import RightArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
+import Add from 'material-ui/svg-icons/content/add-circle';
+import Avatar from 'material-ui/Avatar';
+import IconButton from 'material-ui/IconButton';
 import FileMenu from './fileMenu.js';
 import firebase from '../fire.js';
 
@@ -14,6 +20,7 @@ export default class Folders extends React.Component
 	constructor(props) 
 	{
 		super(props);
+		this.untitledCount = 0;
 		this.database = firebase.database();
 
 		//make sure the url ends with /
@@ -30,17 +37,50 @@ export default class Folders extends React.Component
 		//greeting.set('test');
 	}
 	
+	//causing key warnings
 	urlToBread(s)
 	{
+		this.state.breadcrumbs = [(<Link key="home" to="/" style={{color:"black"}}>Home </Link>)];
 		var split = s.split("/");
 		split = split.filter((val) => val);
-		console.log(split);
-		this.state.breadcrumbs = split.map(function(word) {
-			return " > " + word;
-		});
-		console.log(this.state.breadcrumbs);
+		var url = "/";
+		for(var i = 0; i < split.length; i++)
+		{
+			url += split[i];
+			this.state.breadcrumbs.push(<RightArrow/>);
+			this.state.breadcrumbs.push(<Link key={split[i]} to={url} style={{color:"black"}}> {split[i]} </Link>);
+		}
 	}
 
+	//onclick Function for each folder to change to new url
+	changeUrl(newUrl)
+	{
+		console.log(newUrl);
+		window.location.href=newUrl;
+	}
+
+	//add an untitled folder
+	//potentially dangerous because updating this.state.folders before it is fetched from firebase
+	addFolder()
+	{
+		console.log("addFolder");
+		var self = this;
+		var temp = this.state.folders;
+		temp.push(
+		  <div key={this.untitledCount}>
+		  <ListItem onClick={() => self.changeUrl(this.state.currentLocation + "Untitled")}
+			  leftAvatar={<Avatar icon={<FileFolder />} />}
+			  primaryText={'Untitled'}
+			/>
+			  <Divider />
+		  </div> 
+		);
+		this.untitledCount++;
+		this.setState({folders:temp});
+		console.log(this.state.folders);
+	}
+
+	//format data into list after data has been retrieved
 	componentDidMount()
 	{
 		var self = this;
@@ -50,9 +90,13 @@ export default class Folders extends React.Component
 			var data = Object.keys(self.state.data).map(function(key) {
 				var newUrl = self.state.currentLocation + key;
 				return (
-					<Link key={key} 
-						to={newUrl}> 
-						{key} </Link>);
+					<div key={key}>
+					<ListItem onClick={() => self.changeUrl(newUrl)}
+        				leftAvatar={<Avatar icon={<FileFolder />} />}
+        				primaryText={key}
+      				/>
+						<Divider />
+					</div> );
 				});
 			self.setState({folders: data});
 		});
@@ -62,17 +106,23 @@ export default class Folders extends React.Component
 	render()
 	{
 		return (
-		<div className="file_explorer">
-		<h1>
-		<Link to="/" style={{color:"black"}}>Home</Link>{this.state.breadcrumbs} </h1>
 		<MuiThemeProvider>
-			<div>
+		<div className="file_explorer">
+		<h2> {this.state.breadcrumbs}
+		<IconButton 
+			disableTouchRipple={true}
+			onClick={() => this.addFolder()}
+			iconStyle={{color:"#44aa77", width:"60px", height:"60px"}}>
+			<Add />
+		</IconButton>  </h2>
+		<div>
 			<Divider/>
 			{this.state.folders}
-			</div>
-		</MuiThemeProvider>
-		<FileMenu></FileMenu>		
-		</div>);
+		</div>
+		
+		{/* <FileMenu></FileMenu>		 */}
+		</div>
+		</MuiThemeProvider>);
 	}
 }
 

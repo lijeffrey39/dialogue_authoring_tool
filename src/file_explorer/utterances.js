@@ -24,9 +24,20 @@ export default class Utterances extends React.Component
 		}
 
 		this.currentRef = this.database.ref(this.state.currentLocation);
-
+		this.urlToBread(currentUrl);
 		//set it to test
 		//greeting.set('test');
+	}
+
+	urlToBread(s)
+	{
+		console.log(s);
+		var split = s.split("/");
+		split = split.filter((val) => val);
+		this.state.breadcrumbs = split.map(function(word) {
+			return " > " + word;
+		});
+		console.log(this.state.breadcrumbs);
 	}
 	
 
@@ -51,14 +62,14 @@ export default class Utterances extends React.Component
 	{
 		return (
 		<div className="file_explorer">
-		<h1> Home </h1>
+		<h1> <Link to="/" style={{color:"black"}}>Home</Link>{this.state.breadcrumbs} </h1>
 		<MuiThemeProvider>
 			<div>
 			<Divider/>
 			{this.state.folders}
 			</div>
 		</MuiThemeProvider>
-		<FileMenu></FileMenu>
+		{/* <FileMenu></FileMenu> */}
 		</div>);
 	}
 }
