@@ -6,6 +6,20 @@ import RaisedButton from 'material-ui/RaisedButton';
 import AutoComplete from 'material-ui/AutoComplete';
 import Divider from 'material-ui/Divider';
 import MenuItem from 'material-ui/MenuItem';
+import {List, ListItem} from 'material-ui/List';
+import FileFolder from 'material-ui/svg-icons/file/folder';
+import RightArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
+import Add from 'material-ui/svg-icons/content/add-circle';
+import Avatar from 'material-ui/Avatar';
+import IconButton from 'material-ui/IconButton';
+import {
+	Table,
+	TableBody,
+	TableHeader,
+	TableHeaderColumn,
+	TableRow,
+	TableRowColumn,
+  } from 'material-ui/Table';
 import FileMenu from './fileMenu.js';
 import firebase from '../fire.js';
 
@@ -14,63 +28,140 @@ export default class Utterances extends React.Component
 	constructor(props) 
 	{
 		super(props);
+		this.untitledCount = 0;
 		this.database = firebase.database();
 
 		//make sure the url ends with /
 		var currentUrl = props.match.url.endsWith("/") ? props.match.url : props.match.url + "/";
 		this.state = 
 		{
-			currentLocation: currentUrl
+			currentLocation: currentUrl,
+			tableData: []
 		}
-
+		//get ssml
 		this.currentRef = this.database.ref(this.state.currentLocation);
 		this.urlToBread(currentUrl);
+
 		//set it to test
 		//greeting.set('test');
 	}
-
+	
+	//causing key warnings
 	urlToBread(s)
 	{
-		console.log(s);
+		this.state.breadcrumbs = [(<Link key="home" to="/" style={{color:"black"}}>Home </Link>)];
 		var split = s.split("/");
 		split = split.filter((val) => val);
-		this.state.breadcrumbs = split.map(function(word) {
-			return " > " + word;
-		});
-		console.log(this.state.breadcrumbs);
+		var url = "/";
+		for(var i = 0; i < split.length; i++)
+		{
+			url += split[i];
+			this.state.breadcrumbs.push(<RightArrow/>);
+			this.state.breadcrumbs.push(<Link key={split[i]} to={url} style={{color:"black"}}> {split[i]} </Link>);
+		}
+		if(split.length >= 2)
+		{
+			this.state.phase = split[0];
+			this.state.taskStrategy = split[1];
+		}
 	}
-	
 
+	//onclick Function for each folder to change to new url
+	changeUrl(newUrl)
+	{
+		console.log(newUrl);
+		window.location.href=newUrl;
+	}
+
+	//add an untitled folder
+	//potentially dangerous because updating this.state.folders before it is fetched from firebase
+	addFolder()
+	{
+		var self = this;
+		var temp = this.state.folders;
+		temp.push(
+		  <div key={this.untitledCount}>
+		  <ListItem onClick={() => self.changeUrl(this.state.currentLocation + "Untitled")}
+			  leftAvatar={<Avatar icon={<FileFolder />} />}
+			  primaryText={'Untitled'}
+			/>
+			  <Divider />
+		  </div> 
+		);
+		this.untitledCount++;
+		this.setState({folders:temp});
+		console.log(this.state.folders);
+	}
+
+	//format data into json after data has been retrieved
 	componentDidMount()
 	{
 		var self = this;
 		//read the value
 		this.currentRef.on('value', function(value){
 			self.state.data = value.val();
-			var data = Object.keys(self.state.data).map(function(key) {
-				var newUrl = self.state.currentLocation + key;
-				return (
-					<Link key={key} 
-						to={newUrl}> 
-						{key} </Link>);
-				});
-			self.setState({folders: data});
+			var tableData = [];
+			// var phase = self.state.currentLocation.
+			for(var prop in self.state.data)
+			{
+				var ss = self.state.data[prop];
+				ss.socialStrategy = prop;
+				ss.phase = self.state.phase;
+				ss.taskStrategy = self.state.taskStrategy;
+				tableData.push(ss);
+			}
+			self.setState({tableData: tableData});
+			console.log(self.state.tableData);
 		});
 	}
+
 	
 	render()
 	{
 		return (
-		<div className="file_explorer">
-		<h1> <Link to="/" style={{color:"black"}}>Home</Link>{this.state.breadcrumbs} </h1>
 		<MuiThemeProvider>
-			<div>
+		<div className="file_explorer">
+		<h2> {this.state.breadcrumbs}
+		<IconButton 
+			disableTouchRipple={true}
+			// onClick={() => this.addFolder()}
+			onClick={() => console.log(this.state.currentLocation)}
+			iconStyle={{color:"#44aa77", width:"60px", height:"60px"}}>
+			<Add />
+		</IconButton>  </h2>
+		<div>
 			<Divider/>
-			{this.state.folders}
-			</div>
-		</MuiThemeProvider>
-		{/* <FileMenu></FileMenu> */}
-		</div>);
+			<Table displayRowCheckbox={false}>
+			<TableHeader 
+			displaySelectAll={false}
+            adjustForCheckbox={false}>
+      		<TableRow>
+        		<TableHeaderColumn style={{width: "50%"}}>Text</TableHeaderColumn>
+        		<TableHeaderColumn>Phase</TableHeaderColumn>
+				<TableHeaderColumn>TS</TableHeaderColumn>
+				<TableHeaderColumn>SS</TableHeaderColumn>
+				<TableHeaderColumn>Date</TableHeaderColumn>
+				<TableHeaderColumn>Author</TableHeaderColumn>
+      		</TableRow>
+    		</TableHeader>
+			<TableBody displayRowCheckbox={false}>
+            {this.state.tableData.map( (row, index) => (
+              <TableRow key={index}>
+                <TableRowColumn style={{width: "50%"}}>{row.text}</TableRowColumn>
+                <TableRowColumn>{row.phase}</TableRowColumn>
+				<TableRowColumn>{row.taskStrategy}</TableRowColumn>
+				<TableRowColumn>{row.socialStrategy}</TableRowColumn>
+				<TableRowColumn>{row.date}</TableRowColumn>
+				<TableRowColumn>{row.author}</TableRowColumn>
+              </TableRow>
+              ))}
+          </TableBody>
+			</Table>
+		</div>
+		
+		{/* <FileMenu></FileMenu>		 */}
+		</div>
+		</MuiThemeProvider>);
 	}
 }
 

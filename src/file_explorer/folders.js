@@ -27,7 +27,8 @@ export default class Folders extends React.Component
 		var currentUrl = props.match.url.endsWith("/") ? props.match.url : props.match.url + "/";
 		this.state = 
 		{
-			currentLocation: currentUrl
+			currentLocation: currentUrl,
+			folders: []
 		}
 		//get ssml
 		this.currentRef = this.database.ref(this.state.currentLocation);

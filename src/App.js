@@ -43,7 +43,7 @@ const App = () => (
 		</div> */}
 		<Route exact path="/" component={Folders}/>
 		<Route exact path="/:page" component={Folders}/>
-		<Route exact path="/:page/:page" component={Folders}/>
+		<Route exact path="/:page/:page" component={Utterances}/>
 		<Route exact path="/:page/:page/:page" component={Editor}/>
 		<Route path="/editor" component={Editor}/>
     </div>
