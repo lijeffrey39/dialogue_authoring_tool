@@ -1,62 +1,139 @@
 import React from 'react';
-import './fileExplorer.css';
+import {Link} from 'react-router-dom'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
-import AutoComplete from 'material-ui/AutoComplete';
 import Divider from 'material-ui/Divider';
-import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import FileMenu from './fileMenu.js';
+import {ListItem} from 'material-ui/List';
+import FileFolder from 'material-ui/svg-icons/file/folder';
+import RightArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
+import Add from 'material-ui/svg-icons/content/add-circle';
+import Avatar from 'material-ui/Avatar';
+import IconButton from 'material-ui/IconButton';
+import {
+	Table,
+	TableBody,
+	TableHeader,
+	TableHeaderColumn,
+	TableRow,
+	TableRowColumn,
+  } from 'material-ui/Table';
+import firebase from '../fire.js';
 
-import Paper from 'material-ui/Paper';
-import Menu from 'material-ui/Menu';
-import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
-import PersonAdd from 'material-ui/svg-icons/social/person-add';
-import ContentLink from 'material-ui/svg-icons/content/link';
-import ContentCopy from 'material-ui/svg-icons/content/content-copy';
-import Download from 'material-ui/svg-icons/file/file-download';
-import Delete from 'material-ui/svg-icons/action/delete';
-import FontIcon from 'material-ui/FontIcon';
+export default class Utterances extends React.Component 
+{
+	constructor(props) 
+	{
+		super(props);
+		this.untitledCount = 0;
+		this.database = firebase.database();
 
+		//make sure the url ends with /
+		var currentUrl = props.match.url.endsWith("/") ? props.match.url : props.match.url + "/";
+		this.state = 
+		{
+			currentLocation: currentUrl,
+			tableData: []
+		}
+		//get ssml
+		this.currentRef = this.database.ref(this.state.currentLocation);
+		this.urlToBread(currentUrl);
 
-const style = {
-  paper: {
-    display: 'inline-block',
-    float: 'left',
-    margin: '16px 32px 16px 0',
-  },
-  rightIcon: {
-    textAlign: 'center',
-    lineHeight: '24px',
-  },
-};
+		//set it to test
+		//greeting.set('test');
+	}
+	
+	/**
+	 * Changes string s to html for breadcrumbs
+	 * @param {String} s url
+	 */
+	urlToBread(s)
+	{
+		this.state.breadcrumbs = [(<Link key="home" to="/" style={{color:"black"}}>Home </Link>)];
+		var split = s.split("/");
+		split = split.filter((val) => val);
+		var url = "/";
+		for(var i = 0; i < split.length; i++)
+		{
+			url += split[i];
+			this.state.breadcrumbs.push(<RightArrow/>);
+			this.state.breadcrumbs.push(<Link key={split[i]} to={url} style={{color:"black"}}> {split[i]} </Link>);
+		}
+		if(split.length >= 2)
+		{
+			this.state.phase = split[0];
+			this.state.taskStrategy = split[1];
+		}
+	}
 
-const editor = () => (
+	/**
+	 * onclick Function for each folder to change to new url
+	 * @param {String} newUrl 
+	 */
+	changeUrl(newUrl)
+	{
+		console.log(newUrl);
+		window.location.href=newUrl;
+	}
 
-	<div className="file_explorer">
-		<h1>Dialogue Editor</h1>
+	/**
+	 * Add an untitled folder
+	 * potentially dangerous because updating this.state.folders before it is fetched from firebase
+	 */
+	addFolder()
+	{
+		var self = this;
+		var temp = this.state.folders;
+		temp.push(
+		  <div key={this.untitledCount}>
+		  <ListItem onClick={() => self.changeUrl(this.state.currentLocation + "Untitled")}
+			  leftAvatar={<Avatar icon={<FileFolder />} />}
+			  primaryText={'Untitled'}
+			/>
+			  <Divider />
+		  </div> 
+		);
+		this.untitledCount++;
+		this.setState({folders:temp});
+		console.log(this.state.folders);
+	}
+
+	/**
+	 * format data into json array after data has been retrieved
+	 */
+	componentDidMount()
+	{
+		var self = this;
+		//read the value
+		this.currentRef.on('value', function(value){
+			self.state.data = value.val();
+			console.log(value.val());
+				});
+	}
+
+	/**
+	 * change URL to editor
+	 * @param {*} rowNumber of row clicked
+	 */
+	handleRowClick(rowNumber)
+	{
+		console.log(this);
+		window.location.href += "/" + this.state.tableData[rowNumber].socialStrategy;
+	}
+
+	
+	render()
+	{
+		return (
 		<MuiThemeProvider>
-			<Divider/>
-			      <Menu>
-			        <MenuItem primaryText="Break" leftIcon={<RemoveRedEye />} />
-			        <MenuItem primaryText="Rate" leftIcon={<PersonAdd />} />
-			        <MenuItem primaryText="Pitch" leftIcon={<ContentLink />} />
-			        <MenuItem primaryText="Volume" leftIcon={<ContentCopy />} />
-			        <MenuItem primaryText="Emphasis" leftIcon={<Download />} />
-			        <Divider />
-			      </Menu>
-			<TextField
-		      hintText="Enter dialogue here"
-		      multiLine={true}
-		      rows={2}
-		      rowsMax={4}
-		    />
-		</MuiThemeProvider>
-		<FileMenu></FileMenu>
+		<div className="file_explorer">
+		<h2> {this.state.breadcrumbs}</h2>
+		<Divider></Divider>
 		<div>
+			
 		</div>
-    </div>
-);
+		
+		{/* <FileMenu></FileMenu>		 */}
+		</div>
+		</MuiThemeProvider>);
+	}
+}
 
-export default editor;

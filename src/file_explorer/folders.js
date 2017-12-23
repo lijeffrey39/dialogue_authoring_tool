@@ -1,11 +1,8 @@
 import React from 'react';
 import './folders.css';
 import {Link} from 'react-router-dom'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
-import AutoComplete from 'material-ui/AutoComplete';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import Divider from 'material-ui/Divider';
-import MenuItem from 'material-ui/MenuItem';
 import {List, ListItem} from 'material-ui/List';
 import FileFolder from 'material-ui/svg-icons/file/folder';
 import RightArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
@@ -20,6 +17,8 @@ export default class Folders extends React.Component
 	constructor(props) 
 	{
 		super(props);
+
+		//count of untitled folders for keys
 		this.untitledCount = 0;
 		this.database = firebase.database();
 
@@ -38,7 +37,10 @@ export default class Folders extends React.Component
 		//greeting.set('test');
 	}
 	
-	//causing key warnings
+	/**
+	 * Changes string s to html for breadcrumbs
+	 * @param {String} s url
+	 */
 	urlToBread(s)
 	{
 		this.state.breadcrumbs = [(<Link key="home" to="/" style={{color:"black"}}>Home </Link>)];
@@ -53,15 +55,20 @@ export default class Folders extends React.Component
 		}
 	}
 
-	//onclick Function for each folder to change to new url
+	/**
+	 * onclick Function for each folder to change to new url
+	 * @param {String} newUrl 
+	 */
 	changeUrl(newUrl)
 	{
 		console.log(newUrl);
 		window.location.href=newUrl;
 	}
 
-	//add an untitled folder
-	//potentially dangerous because updating this.state.folders before it is fetched from firebase
+	/**
+	 * Add an untitled folder
+	 * potentially dangerous because updating this.state.folders before it is fetched from firebase
+	 */
 	addFolder()
 	{
 		console.log("addFolder");
@@ -81,7 +88,9 @@ export default class Folders extends React.Component
 		console.log(this.state.folders);
 	}
 
-	//format data into list after data has been retrieved
+	/**
+	 * format data into list after data has been retrieved
+	 */
 	componentDidMount()
 	{
 		var self = this;

@@ -5,9 +5,6 @@ import {
   Route,
 } from 'react-router-dom'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
-import AutoComplete from 'material-ui/AutoComplete';
-import MenuItem from 'material-ui/MenuItem';
 import Folders from './file_explorer/folders.js';
 import Utterances from './file_explorer/utterances.js';
 import Editor from './editor/editor.js';
@@ -45,7 +42,7 @@ const App = () => (
 		<Route exact path="/:page" component={Folders}/>
 		<Route exact path="/:page/:page" component={Utterances}/>
 		<Route exact path="/:page/:page/:page" component={Editor}/>
-		<Route path="/editor" component={Editor}/>
+		{/* <Route path="/editor" component={Editor}/> */}
     </div>
 		</BrowserRouter>
 );
