@@ -1,4 +1,5 @@
 import React from 'react';
+import './editor.css';
 import {Link} from 'react-router-dom'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Divider from 'material-ui/Divider';
@@ -7,6 +8,9 @@ import FileFolder from 'material-ui/svg-icons/file/folder';
 import RightArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 import Add from 'material-ui/svg-icons/content/add-circle';
 import Avatar from 'material-ui/Avatar';
+import TextField from 'material-ui/TextField';
+import {Tabs, Tab} from 'material-ui/Tabs';
+import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import {
 	Table,
@@ -31,7 +35,12 @@ export default class Utterances extends React.Component
 		this.state = 
 		{
 			currentLocation: currentUrl,
-			tableData: []
+			data: {
+				SSML:"",
+				date:"",
+				author:"",
+				text:""
+			}
 		}
 		//get ssml
 		this.currentRef = this.database.ref(this.state.currentLocation);
@@ -54,7 +63,7 @@ export default class Utterances extends React.Component
 		for(var i = 0; i < split.length; i++)
 		{
 			url += split[i];
-			this.state.breadcrumbs.push(<RightArrow/>);
+			this.state.breadcrumbs.push(<RightArrow key={i}/>);
 			this.state.breadcrumbs.push(<Link key={split[i]} to={url} style={{color:"black"}}> {split[i]} </Link>);
 		}
 		if(split.length >= 2)
@@ -65,38 +74,6 @@ export default class Utterances extends React.Component
 	}
 
 	/**
-	 * onclick Function for each folder to change to new url
-	 * @param {String} newUrl 
-	 */
-	changeUrl(newUrl)
-	{
-		console.log(newUrl);
-		window.location.href=newUrl;
-	}
-
-	/**
-	 * Add an untitled folder
-	 * potentially dangerous because updating this.state.folders before it is fetched from firebase
-	 */
-	addFolder()
-	{
-		var self = this;
-		var temp = this.state.folders;
-		temp.push(
-		  <div key={this.untitledCount}>
-		  <ListItem onClick={() => self.changeUrl(this.state.currentLocation + "Untitled")}
-			  leftAvatar={<Avatar icon={<FileFolder />} />}
-			  primaryText={'Untitled'}
-			/>
-			  <Divider />
-		  </div> 
-		);
-		this.untitledCount++;
-		this.setState({folders:temp});
-		console.log(this.state.folders);
-	}
-
-	/**
 	 * format data into json array after data has been retrieved
 	 */
 	componentDidMount()
@@ -104,34 +81,93 @@ export default class Utterances extends React.Component
 		var self = this;
 		//read the value
 		this.currentRef.on('value', function(value){
-			self.state.data = value.val();
+			self.setState({data: value.val()});
 			console.log(value.val());
-				});
+		});
 	}
 
-	/**
-	 * change URL to editor
-	 * @param {*} rowNumber of row clicked
-	 */
-	handleRowClick(rowNumber)
+	handleTextChange(event) 
 	{
-		console.log(this);
-		window.location.href += "/" + this.state.tableData[rowNumber].socialStrategy;
+		var prev = this.state.data;
+		prev.text = event.target.value;
+		this.setState({
+		  data: prev
+		});
 	}
 
-	
+	handleSSMLChange(event) 
+	{
+		var prev = this.state.data;
+		prev.SSML = event.target.value;
+		this.setState({
+		  data: prev
+		});
+	}
+
+	handleCopyButton() 
+	{
+		var prev = this.state.data;
+		prev.SSML += "\n" + prev.text;
+		this.setState({
+			data: prev
+		  });
+	}
+
+	saveData() 
+	{
+		this.currentRef.set(this.state.data);
+		this.returnToPrevious();
+	}
+
+	returnToPrevious()
+	{
+		var re = new RegExp(".*\/");
+		window.location.href = re.exec(window.location.href);
+	}
+
 	render()
 	{
 		return (
 		<MuiThemeProvider>
-		<div className="file_explorer">
-		<h2> {this.state.breadcrumbs}</h2>
+		<div className="editor">
+		<h3> {this.state.breadcrumbs}</h3>
 		<Divider></Divider>
-		<div>
-			
-		</div>
-		
+		<Tabs>
+    	<Tab label="Text" >
+		  <TextField
+		  id="textfield"
+		  style={{width:'50%', margin:'0 25% 0 25%'}}
+		  value={this.state.data.text}
+		  onChange={this.handleTextChange.bind(this)}
+		  multiLine={true}
+        />
+    	</Tab>
+    	<Tab label="SSML" >
+		  <TextField
+		  id="ssmlfield"
+		  style={{width:'50%', margin:'0 0 0 25%'}}
+          value={this.state.data.SSML}
+		  onChange={this.handleSSMLChange.bind(this)}
+		  multiLine={true}
+        />
+		<RaisedButton 
+			label="Copy from Text" 
+			primary={true}
+			onClick={this.handleCopyButton.bind(this)}
+			/>
+    	</Tab>
+		</Tabs>
 		{/* <FileMenu></FileMenu>		 */}
+		<RaisedButton 
+			label="Save" 
+			primary={true}
+			onClick={this.saveData.bind(this)}
+			/>
+		<RaisedButton 
+			label="Cancel" 
+			primary={true}
+			onClick={this.returnToPrevious.bind(this)}
+			/>
 		</div>
 		</MuiThemeProvider>);
 	}

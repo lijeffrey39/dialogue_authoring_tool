@@ -117,14 +117,14 @@ export default class Folders extends React.Component
 	{
 		return (
 		<MuiThemeProvider>
-		<div className="file_explorer">
-		<h2> {this.state.breadcrumbs}
+		<div className="folders">
+		<h3> {this.state.breadcrumbs}
 		<IconButton 
 			disableTouchRipple={true}
 			onClick={() => this.addFolder()}
 			iconStyle={{color:"#44aa77", width:"60px", height:"60px"}}>
 			<Add />
-		</IconButton>  </h2>
+		</IconButton>  </h3>
 		<div>
 			<Divider/>
 			{this.state.folders}

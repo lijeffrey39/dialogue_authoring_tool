@@ -55,7 +55,7 @@ export default class Utterances extends React.Component
 		for(var i = 0; i < split.length; i++)
 		{
 			url += split[i];
-			this.state.breadcrumbs.push(<RightArrow/>);
+			this.state.breadcrumbs.push(<RightArrow key={i}/>);
 			this.state.breadcrumbs.push(<Link key={split[i]} to={url} style={{color:"black"}}> {split[i]} </Link>);
 		}
 		if(split.length >= 2)
@@ -135,14 +135,14 @@ export default class Utterances extends React.Component
 	{
 		return (
 		<MuiThemeProvider>
-		<div className="file_explorer">
-		<h2> {this.state.breadcrumbs}
+		<div className="utterances">
+		<h3> {this.state.breadcrumbs}
 		<IconButton 
 			disableTouchRipple={true}
 			//onClick={() => this.changeUrl()}
 			iconStyle={{color:"#44aa77", width:"60px", height:"60px"}}>
 			<Add />
-		</IconButton>  </h2>
+		</IconButton>  </h3>
 		<div>
 			<Divider/>
 			<Table displayRowCheckbox={false}
