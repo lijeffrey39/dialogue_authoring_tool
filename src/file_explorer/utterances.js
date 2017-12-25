@@ -54,14 +54,9 @@ export default class Utterances extends React.Component
 		var url = "/";
 		for(var i = 0; i < split.length; i++)
 		{
-			url += split[i];
+			url += split[i] + "/";
 			this.state.breadcrumbs.push(<RightArrow key={i}/>);
 			this.state.breadcrumbs.push(<Link key={split[i]} to={url} style={{color:"black"}}> {split[i]} </Link>);
-		}
-		if(split.length >= 2)
-		{
-			this.state.phase = split[0];
-			this.state.taskStrategy = split[1];
 		}
 	}
 
@@ -71,7 +66,6 @@ export default class Utterances extends React.Component
 	 */
 	changeUrl(newUrl)
 	{
-		console.log(newUrl);
 		window.location.href=newUrl;
 	}
 
@@ -94,7 +88,6 @@ export default class Utterances extends React.Component
 		);
 		this.untitledCount++;
 		this.setState({folders:temp});
-		console.log(this.state.folders);
 	}
 
 	/**
@@ -116,7 +109,6 @@ export default class Utterances extends React.Component
 				tableData.push(ss);
 			}
 			self.setState({tableData: tableData});
-			console.log(self.state.tableData);
 		});
 	}
 
@@ -126,8 +118,7 @@ export default class Utterances extends React.Component
 	 */
 	handleRowClick(rowNumber)
 	{
-		console.log(this);
-		window.location.href += "/" + this.state.tableData[rowNumber].socialStrategy;
+		window.location.href = this.state.currentLocation + this.state.tableData[rowNumber].socialStrategy;
 	}
 
 	

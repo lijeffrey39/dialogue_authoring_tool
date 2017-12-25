@@ -45,12 +45,13 @@ export default class Folders extends React.Component
 	{
 		this.state.breadcrumbs = [(<Link key="home" to="/" style={{color:"black"}}>Home </Link>)];
 		var split = s.split("/");
+		console.log(split);
 		split = split.filter((val) => val);
 		var url = "/";
 		for(var i = 0; i < split.length; i++)
 		{
-			url += split[i];
-			this.state.breadcrumbs.push(<RightArrow/>);
+			url += split[i] + "/";
+			this.state.breadcrumbs.push(<RightArrow key={i}/>);
 			this.state.breadcrumbs.push(<Link key={split[i]} to={url} style={{color:"black"}}> {split[i]} </Link>);
 		}
 	}
@@ -61,7 +62,6 @@ export default class Folders extends React.Component
 	 */
 	changeUrl(newUrl)
 	{
-		console.log(newUrl);
 		window.location.href=newUrl;
 	}
 
@@ -71,7 +71,6 @@ export default class Folders extends React.Component
 	 */
 	addFolder()
 	{
-		console.log("addFolder");
 		var self = this;
 		var temp = this.state.folders;
 		temp.push(
@@ -85,7 +84,6 @@ export default class Folders extends React.Component
 		);
 		this.untitledCount++;
 		this.setState({folders:temp});
-		console.log(this.state.folders);
 	}
 
 	/**
