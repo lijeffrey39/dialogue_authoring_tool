@@ -15,6 +15,12 @@ Mockups: [(1)](https://drive.google.com/open?id=0B3ds3_lwLn5cRko5MXpoTGtyYmZ2M0p
 3. Go to the dialogue_authoring_tool folder
 3. type "npm start" in terminal
 
+## Current Features List
+* View phase, task strategy, social strategy folders
+* View utterances
+* Add, modify, delete folders and utterances
+* Edit name, date, author, phase, task strategy, social strategy, text, ssml of utterance
+
 ## Files
 * folders.js: code for folders list (localhost and locahost/\*)
 * utterances.js: code for utterance list (localhost/\*/\*)
@@ -45,21 +51,6 @@ Priorities in (), 1 is highest.
   + Group together like utterances by text (1)
   + Ability to have empty folders (3)
   + Untagged folder (1)
-  
-## MV Features List
-### Utterance Editor
-* Dropdowns to change categories, intents, social strategies
-* Textbox for utterance
-  + drag and drop api tags (ex. hint from Wolfram Alpha)
-  + drag and drop SSML tags
-  + preview text
-  + TTS button
-* Save, cancel, undo save buttons
-### Main menu (page 0)
-* Sidebar with search, select phase, intent, social strategy from dropdown
-* List of all utterances that match category, intent, social strategy
-  + highlight/copy/paste/delete/undo/add new
-  + click utterance to go to Page 2
 
 [Project Box](https://cmu.box.com/s/bksvdkoy27pxg2k0lm80stzrf0y5pgp6)
 [Mendeley Group](https://www.mendeley.com/community/rapt-fall-2017-interns/)
