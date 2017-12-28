@@ -5,7 +5,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import Divider from 'material-ui/Divider';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import {List, ListItem} from 'material-ui/List';
+import {ListItem} from 'material-ui/List';
 import FileFolder from 'material-ui/svg-icons/file/folder';
 import RightArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
@@ -15,7 +15,7 @@ import Avatar from 'material-ui/Avatar';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import Dialog from 'material-ui/Dialog';
-import FileMenu from './fileMenu.js';
+// import FileMenu from './fileMenu.js';
 import firebase from '../fire.js';
 
 export default class Folders extends React.Component 
@@ -32,16 +32,13 @@ export default class Folders extends React.Component
 		var currentUrl = props.match.url.endsWith("/") ? props.match.url : props.match.url + "/";
 		this.state = 
 		{
-			currentLocation: currentUrl,
-			folders: [],
-			editFolderModalOpen: false
+			currentLocation: currentUrl, //current location
+			folders: [], //list html for folders
+			editFolderModalOpen: false, //whether to show the editFolderModal
+			editNew: false //whether we are editing a new modal
 		}
-		//get ssml
 		this.currentRef = this.database.ref(this.state.currentLocation);
 		this.urlToBread(currentUrl);
-
-		//set it to test
-		//greeting.set('test');
 	}
 	
 	/**
@@ -72,24 +69,11 @@ export default class Folders extends React.Component
 	}
 
 	/**
-	 * Add an untitled folder
-	 * potentially dangerous because updating this.state.folders before it is fetched from firebase
+	 * Add a new folder and open the edit folder modal
 	 */
 	addFolder()
 	{
-		var self = this;
-		var temp = this.state.folders;
-		temp.unshift(
-		  <div key={this.untitledCount}>
-		  <ListItem onClick={() => self.changeUrl(this.state.currentLocation + "Untitled")}
-			  leftAvatar={<Avatar icon={<FileFolder />} />}
-			  primaryText={'Untitled'}
-			/>
-			  <Divider />
-		  </div> 
-		);
-		this.untitledCount++;
-		this.setState({folders:temp});
+		this.setState({editNew: true}, () => this.editFolder("Untitled"));
 	}
 
 	/**
@@ -101,18 +85,21 @@ export default class Folders extends React.Component
 		//read the value
 		this.currentRef.on('value', function(value){
 			self.state.data = value.val();
-			var data = Object.keys(self.state.data).map(function(key, index) {
+			if(!self.state.data)
+			{
+				return;
+			}
+			var data = Object.keys(self.state.data).map(function(key) {
 				var newUrl = self.state.currentLocation + key;
 				return (
 					<div key={key}>
 					<ListItem 
 						onClick={() => self.changeUrl(newUrl)}
-						onKeyboardFocus={() => void(0)}
         				leftAvatar={<Avatar icon={<FileFolder />} />}
 						primaryText={key}
 						rightIconButton={<IconButton><Edit onClick={() => self.editFolder(key)}/></IconButton>}
       				/>
-						<Divider />
+					<Divider />
 					</div> );
 				});
 			self.setState({folders: data});
@@ -129,23 +116,45 @@ export default class Folders extends React.Component
 		this.setState({editFolderModalOpen: true, editFolderName: name});
 	}
 
+	/**
+	 * If the folder is not new, delete data at original name and move data to new name.
+	 * If the folder is new, add an empty subfolder.
+	 * Update the database and close the modal.
+	 */
 	handleModalSave()
 	{
-		var temp = this.state.data;
-		var movedData = this.state.data[this.originalName];
-		temp[this.originalName] = {};
-		temp[this.state.editFolderName] = movedData;
-		this.setState({editFolderModalOpen: false, data: temp});
+		if(this.state.editFolderName !== "")
+		{
+			if(!this.state.editNew)
+			{
+				var movedData = this.state.data[this.originalName];
+				this.database.ref(this.state.currentLocation + this.originalName).set({});
+			}
+			else
+			{
+				//needs to have something inside or it will be blank
+				var movedData = {Untitled: ""};
+			}
+			this.database.ref(this.state.currentLocation + this.state.editFolderName).set(movedData);
+			this.setState({editFolderModalOpen: false, editNew: false});
+		}
 	}
 
+	/**
+	 * Close the modal
+	 */
 	handleModalCancel()
 	{
-		this.setState({editFolderModalOpen: false});
+		this.setState({editFolderModalOpen: false, editNew: false});
 	}
 
+	/**
+	 * Delete the current folder and close the modal
+	 */
 	handleModalDelete()
 	{
-		
+		this.database.ref(this.state.currentLocation + this.state.editFolderName).set({});
+		this.setState({editFolderModalOpen: false, editNew: false});
 	}
 
 	/**
@@ -195,13 +204,17 @@ export default class Folders extends React.Component
           modal={false}
           open={this.state.editFolderModalOpen}
         >
+		<div>
           Name
 		  <TextField
 		  id="namefield"
 		  style={{width:'50%', margin:'0 5% 0 25%'}}
           value={this.state.editFolderName}
 		  onChange={this.handleNameChange.bind(this)}
+		  errorText={(this.state.editFolderName === "" && 'Required') || 
+		  			(this.state.editFolderName === "Untitled" && 'Please change the name')}
           />
+		  </div>
         </Dialog>
 		<div>
 			<Divider/>

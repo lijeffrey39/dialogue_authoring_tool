@@ -3,10 +3,10 @@ import './utterances.css';
 import {Link} from 'react-router-dom'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Divider from 'material-ui/Divider';
-import {ListItem} from 'material-ui/List';
-import FileFolder from 'material-ui/svg-icons/file/folder';
+// import {ListItem} from 'material-ui/List';
+// import FileFolder from 'material-ui/svg-icons/file/folder';
 import RightArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
-import Avatar from 'material-ui/Avatar';
+// import Avatar from 'material-ui/Avatar';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {
@@ -31,15 +31,11 @@ export default class Utterances extends React.Component
 		var currentUrl = props.match.url.endsWith("/") ? props.match.url : props.match.url + "/";
 		this.state = 
 		{
-			currentLocation: currentUrl,
-			tableData: []
+			currentLocation: currentUrl, //current location
+			tableData: [] //array of utterances
 		}
-		//get ssml
 		this.currentRef = this.database.ref(this.state.currentLocation);
 		this.urlToBread(currentUrl);
-
-		//set it to test
-		//greeting.set('test');
 	}
 	
 	/**
@@ -61,8 +57,7 @@ export default class Utterances extends React.Component
 	}
 
 	/**
-	 * Add an untitled folder
-	 * potentially dangerous because updating this.state.folders before it is fetched from firebase
+	 * Add an utterance by opening the editor to a new page
 	 */
 	addUtterance()
 	{
@@ -70,12 +65,11 @@ export default class Utterances extends React.Component
 	}
 
 	/**
-	 * format data into json array after data has been retrieved
+	 * format data into array after data has been retrieved
 	 */
 	componentDidMount()
 	{
 		var self = this;
-		//read the value
 		this.currentRef.on('value', function(value){
 			self.state.data = value.val();
 			var tableData = [];
@@ -142,8 +136,6 @@ export default class Utterances extends React.Component
           </TableBody>
 			</Table>
 		</div>
-		
-		{/* <FileMenu></FileMenu>		 */}
 		</div>
 		</MuiThemeProvider>);
 	}

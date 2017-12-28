@@ -3,25 +3,12 @@ import './editor.css';
 import {Link} from 'react-router-dom'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Divider from 'material-ui/Divider';
-import {ListItem} from 'material-ui/List';
-import FileFolder from 'material-ui/svg-icons/file/folder';
 import RightArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
-import Add from 'material-ui/svg-icons/content/add-circle';
-import Avatar from 'material-ui/Avatar';
 import TextField from 'material-ui/TextField';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import RaisedButton from 'material-ui/RaisedButton';
-import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
-import {
-	Table,
-	TableBody,
-	TableHeader,
-	TableHeaderColumn,
-	TableRow,
-	TableRowColumn,
-  } from 'material-ui/Table';
 import firebase from '../fire.js';
 
 export default class Utterances extends React.Component 
@@ -79,7 +66,7 @@ export default class Utterances extends React.Component
 		this.state.taskStrategy = this.split[1];
 
 		//set up new utterance
-		if(this.split[2] == "new")
+		if(this.split[2] === "new")
 		{
 			this.state.socialStrategy = "";
 			this.state.new = true;
@@ -229,12 +216,12 @@ export default class Utterances extends React.Component
 	 */
 	saveData() 
 	{
-		if(this.state.phase != "" && this.state.taskStrategy != "" && this.state.socialStrategy != "")
+		if(this.state.phase !== "" && this.state.taskStrategy !== "" && this.state.socialStrategy !== "")
 		{
 			var userLoc = "/" + this.state.phase + "/" + this.state.taskStrategy + "/" + this.state.socialStrategy + "/";
 			var userRef = this.database.ref(userLoc);
 			userRef.set(this.state.data);
-			if(userLoc != this.state.currentLocation)
+			if(userLoc !== this.state.currentLocation)
 			{
 				this.currentRef.set({}); //currently causes an error on page because there is no text to display, but should be ok
 										 // because we return to the previous page anyway
@@ -304,7 +291,7 @@ export default class Utterances extends React.Component
 		<div style={{display:'inline-block'}}><h5>Phase</h5>
 		<SelectField
 		value={this.state.phase}
-		errorText={this.state.phase == "" && 'Required'}
+		errorText={this.state.phase === "" && 'Required'}
         onChange={this.handlePhaseChange.bind(this)}
         maxHeight={200}>
         	{this.state.phases}
@@ -312,7 +299,7 @@ export default class Utterances extends React.Component
 		<div style={{display:'inline-block'}}><h5>Task Strategy</h5>
 		  <SelectField
 		value={this.state.taskStrategy}
-		errorText={this.state.taskStrategy == "" && 'Required'}
+		errorText={this.state.taskStrategy === "" && 'Required'}
         onChange={this.handleTaskStrategyChange.bind(this)}
         maxHeight={200}>
         	{this.state.taskStrategies}
@@ -320,7 +307,7 @@ export default class Utterances extends React.Component
 		<div style={{display:'inline-block'}}><h5>Social Strategy</h5>
 		  <SelectField
 		value={this.state.socialStrategy}
-		errorText={this.state.socialStrategy == "" && 'Required'}
+		errorText={this.state.socialStrategy === "" && 'Required'}
         onChange={this.handleSocialStrategyChange.bind(this)}
         maxHeight={200}>
         	{this.state.socialStrategies}
@@ -329,7 +316,7 @@ export default class Utterances extends React.Component
 		<h5>Author</h5>
 		<TextField
 		  id="authorfield"
-		  errorText={this.state.data.author == "" && 'Required'}
+		  errorText={this.state.data.author === "" && 'Required'}
 		  style={{width:'75%'}}
 		  value={this.state.data.author}
 		  onChange={this.handleAuthorChange.bind(this)}
@@ -339,7 +326,7 @@ export default class Utterances extends React.Component
 		<h5>Date</h5>
 		<TextField
 		  id="datefield"
-		  errorText={this.state.data.date == "" && 'Required'}
+		  errorText={this.state.data.date === "" && 'Required'}
 		  style={{width:'75%'}}
 		  value={this.state.data.date}
 		  onChange={this.handleDateChange.bind(this)}
