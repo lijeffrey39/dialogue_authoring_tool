@@ -47,7 +47,8 @@ export default class Utterances extends React.Component
 			socialStrategies: [],
 			phase: "",
 			taskStrategy: "",
-			socialStrategy: ""
+			socialStrategy: "",
+			new: false
 		}
 		//get ssml
 		this.currentRef = this.database.ref(this.state.currentLocation);
@@ -74,14 +75,24 @@ export default class Utterances extends React.Component
 			this.state.breadcrumbs.push(<Link key={this.split[i]} to={url} style={{color:"black"}}> {this.split[i]} </Link>);
 		}
 		
-		if(this.split.length >= 3)
+		this.state.phase = this.split[0];
+		this.state.taskStrategy = this.split[1];
+
+		//set up new utterance
+		if(this.split[2] == "new")
 		{
-			this.state.phase = this.split[0];
-			this.state.taskStrategy = this.split[1];
+			this.state.socialStrategy = "";
+			this.state.new = true;
+		}
+		else
+		{
 			this.state.socialStrategy = this.split[2];
 		}
 	}
 
+	/**
+	 * Returns phases from database in dropdown list
+	 */
 	getPhases()
 	{
 		var self = this;
@@ -97,38 +108,42 @@ export default class Utterances extends React.Component
 		});
 	}
 
+	/**
+	 * returns task strategies from database in dropdown list
+	 */
 	getTaskStrategies()
 	{
 		var self = this;
 		var taskStrategies = [];
 		this.database.ref("/" + this.state.phase).on('value', function(value){
+			
 			var i = 0;
 			for(var prop in value.val())
 			{
 				taskStrategies.push(<MenuItem value={prop} key={i} primaryText={prop} />);
 				i++;
 			}
+			
 			self.setState({taskStrategies});
 		});
 	}
 
+	/**
+	* Returns social strategies in dropdown list
+	*/
 	getSocialStrategies()
 	{
-		var self = this;
+		var SS = ["NONE", "PR", "SD", "ID", "RSE", "VSN", "QE"];
 		var socialStrategies = [];
-		this.database.ref("/" + this.state.phase + "/" + this.state.taskStrategy).on('value', function(value){
-			var i = 0;
-			for(var prop in value.val())
-			{
-				socialStrategies.push(<MenuItem value={prop} key={i} primaryText={prop} />);
-				i++;
-			}
-			self.setState({socialStrategies});
-		});
+		for(var i = 0; i < SS.length; i++)
+		{
+			socialStrategies.push(<MenuItem value={SS[i]} key={i} primaryText={SS[i]} />);
+		}
+		this.setState({socialStrategies});
 	}
 
 	/**
-	 * format data into json array after data has been retrieved
+	 * Get dropdown lists and utterance data from database
 	 */
 	componentDidMount()
 	{
@@ -136,12 +151,44 @@ export default class Utterances extends React.Component
 		this.getPhases();
 		this.getTaskStrategies();
 		this.getSocialStrategies();
-		//read the value
-		this.currentRef.on('value', function(value){
-			self.setState({data: value.val()});
+		if(!this.state.new)
+		{
+			this.currentRef.on('value', function(value){
+				self.setState({data: value.val()});
+			});
+		}
+	}
+
+	/**
+	 * Change the utterance's author
+	 * @param {*} event 
+	 */
+	handleAuthorChange(event) 
+	{
+		var prev = this.state.data;
+		prev.author = event.target.value;
+		this.setState({
+		  data: prev
 		});
 	}
 
+	/**
+	 * Change the utterance's date
+	 * @param {*} event 
+	 */
+	handleDateChange(event) 
+	{
+		var prev = this.state.data;
+		prev.date = event.target.value;
+		this.setState({
+		  data: prev
+		});
+	}
+
+	/**
+	 * Change the utterance's text
+	 * @param {*} event 
+	 */
 	handleTextChange(event) 
 	{
 		var prev = this.state.data;
@@ -151,6 +198,10 @@ export default class Utterances extends React.Component
 		});
 	}
 
+	/**
+	 * Change the utterance's ssml
+	 * @param {*} event 
+	 */
 	handleSSMLChange(event) 
 	{
 		var prev = this.state.data;
@@ -160,6 +211,9 @@ export default class Utterances extends React.Component
 		});
 	}
 
+	/**
+	 * Append text from text field to ssml field
+	 */
 	handleCopyButton() 
 	{
 		var prev = this.state.data;
@@ -169,34 +223,72 @@ export default class Utterances extends React.Component
 		  });
 	}
 
+	/**
+	 * Saves data to the database in the specified location. 
+	 * If the specified phase, task strategy, or social strategy are different, delete data in the old location.
+	 */
 	saveData() 
 	{
-		// if(this.state.phase != "" && this.state.taskStrategy != "" && this.state.socialStrategy != "")
-		// {
-		// 	// this.currentRef.set(this.state.data);
-		// 	// this.returnToPrevious();
-		// }
-		// console.log("/" + this.state.phase + "/" + this.state.taskStrategy + "/" + this.state.socialStrategy);
+		if(this.state.phase != "" && this.state.taskStrategy != "" && this.state.socialStrategy != "")
+		{
+			var userLoc = "/" + this.state.phase + "/" + this.state.taskStrategy + "/" + this.state.socialStrategy + "/";
+			var userRef = this.database.ref(userLoc);
+			userRef.set(this.state.data);
+			if(userLoc != this.state.currentLocation)
+			{
+				this.currentRef.set({}); //currently causes an error on page because there is no text to display, but should be ok
+										 // because we return to the previous page anyway
+			}
+			this.returnToPrevious();
+		}
 	}
 
+	/**
+	 * Deletes data at the current location and returns to the previous page
+	 */
+	deleteData()
+	{
+		this.currentRef.set({});
+		this.returnToPrevious();
+	}
+
+	/**
+	 * returns to the utterances page
+	 */
 	returnToPrevious()
 	{
 		var re = new RegExp(".*\/");
 		window.location.href = re.exec(window.location.href);
 	}
 
+	/**
+	 * Changes the phase, updates the task strategies list and clears the task strategy and social strategy
+	 * @param {*} event 
+	 * @param {*} index 
+	 * @param {*} value 
+	 */
 	handlePhaseChange(event, index, value)
 	{
-		this.getTaskStrategies();
-		this.setState({phase: value, socialStrategies:[], taskStrategy: "", socialStrategy: ""});
+		this.setState({phase: value, taskStrategy: "", socialStrategy: ""}, () => this.getTaskStrategies());
 	}
 
+	/**
+	 * Changes the task strategy, clears the social strategy
+	 * @param {*} event 
+	 * @param {*} index 
+	 * @param {*} value 
+	 */
 	handleTaskStrategyChange(event, index, value)
 	{
-		this.getSocialStrategies();
 		this.setState({taskStrategy: value, socialStrategy: ""});
 	}
 
+	/**
+	 * Changes the social strategy
+	 * @param {*} event 
+	 * @param {*} index 
+	 * @param {*} value 
+	 */
 	handleSocialStrategyChange(event, index, value)
 	{
 		this.setState({socialStrategy: value});
@@ -209,24 +301,50 @@ export default class Utterances extends React.Component
 		<div className="editor">
 		<h3> {this.state.breadcrumbs}</h3>
 		<Divider></Divider>
+		<div style={{display:'inline-block'}}><h5>Phase</h5>
 		<SelectField
-        value={this.state.phase}
+		value={this.state.phase}
+		errorText={this.state.phase == "" && 'Required'}
         onChange={this.handlePhaseChange.bind(this)}
         maxHeight={200}>
         	{this.state.phases}
-      	</SelectField>
+      	</SelectField></div>
+		<div style={{display:'inline-block'}}><h5>Task Strategy</h5>
 		  <SelectField
-        value={this.state.taskStrategy}
+		value={this.state.taskStrategy}
+		errorText={this.state.taskStrategy == "" && 'Required'}
         onChange={this.handleTaskStrategyChange.bind(this)}
         maxHeight={200}>
         	{this.state.taskStrategies}
-      	</SelectField>
+      	</SelectField></div>
+		<div style={{display:'inline-block'}}><h5>Social Strategy</h5>
 		  <SelectField
-        value={this.state.socialStrategy}
+		value={this.state.socialStrategy}
+		errorText={this.state.socialStrategy == "" && 'Required'}
         onChange={this.handleSocialStrategyChange.bind(this)}
         maxHeight={200}>
         	{this.state.socialStrategies}
-      	</SelectField>
+      	</SelectField></div>
+		<div style={{display:'inline-block', verticalAlign:'top'}}>
+		<h5>Author</h5>
+		<TextField
+		  id="authorfield"
+		  errorText={this.state.data.author == "" && 'Required'}
+		  style={{width:'75%'}}
+		  value={this.state.data.author}
+		  onChange={this.handleAuthorChange.bind(this)}
+        />
+		</div>
+		<div style={{display:'inline-block', verticalAlign:'top'}}>
+		<h5>Date</h5>
+		<TextField
+		  id="datefield"
+		  errorText={this.state.data.date == "" && 'Required'}
+		  style={{width:'75%'}}
+		  value={this.state.data.date}
+		  onChange={this.handleDateChange.bind(this)}
+        />
+		</div>
 		<Tabs>
     	<Tab label="Text" >
 		  <TextField
@@ -259,8 +377,14 @@ export default class Utterances extends React.Component
 			/>
 		<RaisedButton 
 			label="Cancel" 
-			primary={true}
 			onClick={this.returnToPrevious.bind(this)}
+			style={{margin:"10px"}}
+			/>
+		<RaisedButton 
+			label="Delete" 
+			backgroundColor="#EF3434"
+			labelColor="white"
+			onClick={this.deleteData.bind(this)}
 			/>
 		</div>
 		</MuiThemeProvider>);

@@ -6,9 +6,9 @@ import Divider from 'material-ui/Divider';
 import {ListItem} from 'material-ui/List';
 import FileFolder from 'material-ui/svg-icons/file/folder';
 import RightArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
-import Add from 'material-ui/svg-icons/content/add-circle';
 import Avatar from 'material-ui/Avatar';
-import IconButton from 'material-ui/IconButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import {
 	Table,
 	TableBody,
@@ -61,33 +61,12 @@ export default class Utterances extends React.Component
 	}
 
 	/**
-	 * onclick Function for each folder to change to new url
-	 * @param {String} newUrl 
-	 */
-	changeUrl(newUrl)
-	{
-		window.location.href=newUrl;
-	}
-
-	/**
 	 * Add an untitled folder
 	 * potentially dangerous because updating this.state.folders before it is fetched from firebase
 	 */
-	addFolder()
+	addUtterance()
 	{
-		var self = this;
-		var temp = this.state.folders;
-		temp.push(
-		  <div key={this.untitledCount}>
-		  <ListItem onClick={() => self.changeUrl(this.state.currentLocation + "Untitled")}
-			  leftAvatar={<Avatar icon={<FileFolder />} />}
-			  primaryText={'Untitled'}
-			/>
-			  <Divider />
-		  </div> 
-		);
-		this.untitledCount++;
-		this.setState({folders:temp});
+		window.location.href = this.state.currentLocation + "new";
 	}
 
 	/**
@@ -127,13 +106,12 @@ export default class Utterances extends React.Component
 		return (
 		<MuiThemeProvider>
 		<div className="utterances">
-		<h3> {this.state.breadcrumbs}
-		<IconButton 
-			disableTouchRipple={true}
-			//onClick={() => this.changeUrl()}
-			iconStyle={{color:"#44aa77", width:"60px", height:"60px"}}>
-			<Add />
-		</IconButton>  </h3>
+		<h3> {this.state.breadcrumbs} 
+		<FloatingActionButton 
+			style={{float:'right', marginRight:'20px', position:'relative', top:'-7px'}}
+			onClick={() => this.addUtterance()}>
+      		<ContentAdd />
+		</FloatingActionButton></h3>
 		<div>
 			<Divider/>
 			<Table displayRowCheckbox={false}
