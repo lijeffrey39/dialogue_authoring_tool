@@ -57,7 +57,6 @@ export default class Utterances extends React.Component
 		}
 		if(split.length >= 2)
 		{
-			console.log(split);
 			this.state.phase = split[0];
 			this.state.taskStrategy = split[1];
 		}
