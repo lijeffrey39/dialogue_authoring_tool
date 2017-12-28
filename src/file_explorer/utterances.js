@@ -9,6 +9,7 @@ import RightArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 // import Avatar from 'material-ui/Avatar';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import AppBar from 'material-ui/AppBar';
 import {
 	Table,
 	TableBody,
@@ -44,15 +45,15 @@ export default class Utterances extends React.Component
 	 */
 	urlToBread(s)
 	{
-		this.state.breadcrumbs = [(<Link key="home" to="/" style={{color:"black"}}>Home </Link>)];
+		this.state.breadcrumbs = [(<Link key="home" to="/" style={{color:"white"}}>Home </Link>)];
 		var split = s.split("/");
 		split = split.filter((val) => val);
 		var url = "/";
 		for(var i = 0; i < split.length; i++)
 		{
 			url += split[i] + "/";
-			this.state.breadcrumbs.push(<RightArrow key={i}/>);
-			this.state.breadcrumbs.push(<Link key={split[i]} to={url} style={{color:"black"}}> {split[i]} </Link>);
+			this.state.breadcrumbs.push(<RightArrow key={i} color={"white"}/>);
+			this.state.breadcrumbs.push(<Link key={split[i]} to={url} style={{color:"white"}}> {split[i]} </Link>);
 		}
 	}
 
@@ -100,12 +101,23 @@ export default class Utterances extends React.Component
 		return (
 		<MuiThemeProvider>
 		<div className="utterances">
-		<h3> {this.state.breadcrumbs} 
+		{/* <h3> {this.state.breadcrumbs} 
 		<FloatingActionButton 
 			style={{float:'right', marginRight:'20px', position:'relative', top:'-7px'}}
 			onClick={() => this.addUtterance()}>
       		<ContentAdd />
-		</FloatingActionButton></h3>
+		</FloatingActionButton></h3> */}
+		<AppBar
+			title={this.state.breadcrumbs}
+    		iconElementRight={
+			<FloatingActionButton 
+				mini={true}
+				backgroundColor="white"
+				iconStyle={{fill: "#1FBCD3"}}
+				onClick={() => this.addUtterance()}>
+				  <ContentAdd />
+			</FloatingActionButton>}
+  		/>
 		<div>
 			<Divider/>
 			<Table displayRowCheckbox={false}
