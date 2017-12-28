@@ -55,6 +55,12 @@ export default class Utterances extends React.Component
 			this.state.breadcrumbs.push(<RightArrow key={i} color={"white"}/>);
 			this.state.breadcrumbs.push(<Link key={split[i]} to={url} style={{color:"white"}}> {split[i]} </Link>);
 		}
+		if(split.length >= 2)
+		{
+			console.log(split);
+			this.state.phase = split[0];
+			this.state.taskStrategy = split[1];
+		}
 	}
 
 	/**
@@ -101,12 +107,6 @@ export default class Utterances extends React.Component
 		return (
 		<MuiThemeProvider>
 		<div className="utterances">
-		{/* <h3> {this.state.breadcrumbs} 
-		<FloatingActionButton 
-			style={{float:'right', marginRight:'20px', position:'relative', top:'-7px'}}
-			onClick={() => this.addUtterance()}>
-      		<ContentAdd />
-		</FloatingActionButton></h3> */}
 		<AppBar
 			title={this.state.breadcrumbs}
     		iconElementRight={
